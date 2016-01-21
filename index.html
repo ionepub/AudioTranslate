@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="misapplication-tap-highlight" content="no"/>
+	<meta name="HandheldFriendly" content="true"/>
+	<meta name="MobileOptimized" content="320"/>
+    <title>Audio Translate</title>
+    <script type="text/javascript">
+//取消浏览器的所有事件，使得active的样式在手机上正常生效
+document.addEventListener('touchstart',function(){
+    return false;
+},true);
+// 禁止选择
+document.oncontextmenu=function(){
+	return false;
+};
+var as='slide-in-right',at=200;// 默认动画时间
+function plusReady(){
+	// 隐藏滚动条
+	plus.webview.currentWebview().setStyle({scrollIndicator:'none'});
+	// Android处理返回键
+	plus.key.addEventListener('backbutton',function(){
+		if(confirm('确认退出？')){
+			plus.runtime.quit();
+		}
+	},false);
+	compatibleAdjust();
+	contentbox = document.getElementById("contentbox");
+	welcome();
+}
+if(window.plus){
+	plusReady();
+}else{
+	document.addEventListener('plusready',plusReady,false);
+}
+// DOMContentLoaded事件处理
+var _domReady=false;
+document.addEventListener('DOMContentLoaded',function(){
+	_domReady=true;
+	compatibleAdjust();
+},false);
+// 兼容性样式调整
+var _adjust=false;
+function compatibleAdjust(){
+	if(_adjust||!window.plus||!_domReady){
+		return;
+	}
+	_adjust=true;
+	// iOS平台使用div的滚动条
+	if('iOS'==plus.os.name){
+		as='pop-in';
+		at=300;
+		document.getElementById('content').className='scontent';
+	}
+	// 关闭启动界面
+	setTimeout(function(){
+		plus.navigator.closeSplashscreen();
+	},500);
+}
+			
+</script>
+<script src="js/translate.js"></script>
+<link rel="stylesheet" href="css/basic.css" type="text/css" charset="utf-8"/>
+</head>
+<body onload="text=document.getElementById('reqtext');">
+	<header>
+		<div style="width:15%;height:100%;float:left;"></div>
+		<div class="nvtt">Audio Translate</div>
+		<!--<div class="nvbt iabout" onclick="clicked('about.html');"></div>-->
+	</header>
+	<div id="content" class="content">
+		<ul id="contentbox">
+			<!--<li class="right">Welcome</li>-->
+		</ul>
+		<div class="blank" id="scroll">&nbsp;</div>
+	</div>
+	<footer>
+		<ul>
+			<form method="post" action="" onsubmit="return checkForm();">
+				<li class="recbtn" onclick="startRecognize();"><img src="img/arecord.png"></li>
+				<!--<li class="textbox"><input type="text" name="reqtext" id="reqtext" /></li>-->
+				<li class="textbox"><textarea id="reqtext"></textarea></li>
+				<li class="sendbtn"><input id="sendbutton" type="submit" value="发送" /></li>
+			</form>
+		</ul>
+	</footer>
+</body>
+</html>
